@@ -8,7 +8,7 @@ PROG=/usr/bin/cloudflared
 
 start_service() {
         procd_open_instance
-        procd_set_param command "$PROG" --no-autoupdate tunnel run
+        procd_set_param command "$PROG" --no-autoupdate tunnel --metrics 0.0.0.0:1111 run
         procd_set_param respawn
         procd_set_param stdout 1
         procd_set_param stderr 1
