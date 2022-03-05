@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openwrt-cloudflared
-PKG_VERSION:=2022.2.2
+PKG_VERSION:=2022.3.0
 PKG_RELEASE:=1
 
 PKG_LICENSE:=MPLv2
@@ -10,7 +10,7 @@ PKG_MAINTAINER:=yichya <mail@yichya.dev>
 
 PKG_SOURCE:=cloudflared-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/cloudflare/cloudflared/tar.gz/${PKG_VERSION}?
-PKG_HASH:=28bccb9a99cfcccade673f1c14cdbecc5fba7ab58fa6f1062cd671d749904ba5
+PKG_HASH:=619426d20457e3f40b3e604d528d645df123042d6f9edcf6fc98d00433f3d094
 PKG_BUILD_DEPENDS:=golang/host
 PKG_BUILD_PARALLEL:=1
 
@@ -31,14 +31,17 @@ define Package/$(PKG_NAME)/description
 endef
 
 MAKE_PATH:=$(GO_PKG_WORK_DIR_NAME)/build/src/$(GO_PKG)
-MAKE_VARS += $(GO_PKG_VARS)
+MAKE_VARS+=$(GO_PKG_VARS)
 
 define Build/Patch
 	$(CP) $(PKG_BUILD_DIR)/../cloudflared-$(PKG_VERSION)/* $(PKG_BUILD_DIR)
 endef
 
+DATE:=$(shell date -u '+%Y-%m-%d-%H%M UTC')
+VERSION_FLAGS:=-X "main.Version=$(PKG_VERSION)" -X "main.BuildTime=$(DATE)"
+
 define Build/Compile
-	cd $(PKG_BUILD_DIR); $(GO_PKG_VARS) CGO_ENABLED=0 go build -trimpath -ldflags "-s -w" -o $(PKG_INSTALL_DIR)/bin/cloudflared ./cmd/cloudflared; 
+	cd $(PKG_BUILD_DIR); $(GO_PKG_VARS) CGO_ENABLED=0 go build -trimpath -ldflags '-s -w $(VERSION_FLAGS)' -o $(PKG_INSTALL_DIR)/bin/cloudflared ./cmd/cloudflared; 
 endef
 
 define Package/$(PKG_NAME)/install
