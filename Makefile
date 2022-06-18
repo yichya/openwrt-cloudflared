@@ -1,8 +1,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openwrt-cloudflared
-PKG_VERSION:=2022.6.2
-PKG_RELEASE:=1
+PKG_VERSION:=2022.6.3
+PKG_RELEASE:=2
 
 PKG_LICENSE:=MPLv2
 PKG_LICENSE_FILES:=LICENSE
@@ -10,7 +10,7 @@ PKG_MAINTAINER:=yichya <mail@yichya.dev>
 
 PKG_SOURCE:=cloudflared-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/cloudflare/cloudflared/tar.gz/${PKG_VERSION}?
-PKG_HASH:=599ea11ff7f6a8941eb2cdbc1eced0419eb3dec85104f3f7a6a8268f4d0e722a
+PKG_HASH:=74fb20e78f69db086f6044eae9d7a09bb3b59001a14d17c18edd9cb4ee8db4f6
 PKG_BUILD_DEPENDS:=golang/host
 PKG_BUILD_PARALLEL:=1
 
@@ -30,6 +30,17 @@ define Package/$(PKG_NAME)/description
 	Argo tunnel client
 endef
 
+define Package/$(PKG_NAME)/config
+menu "openwrt-cloudflared Configuration"
+        depends on PACKAGE_$(PKG_NAME)
+
+config PACKAGE_OPENWRT_CLOUDFLARED_RUN_AS_NETWORK
+        bool "Run as user network"
+        default n
+
+endmenu
+endef
+
 MAKE_PATH:=$(GO_PKG_WORK_DIR_NAME)/build/src/$(GO_PKG)
 MAKE_VARS+=$(GO_PKG_VARS)
 
@@ -46,7 +57,11 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/init.d
+ifdef CONFIG_PACKAGE_OPENWRT_CLOUDFLARED_RUN_AS_NETWORK
+	$(INSTALL_BIN) ./cloudflared.network $(1)/etc/init.d/cloudflared
+else
 	$(INSTALL_BIN) ./cloudflared.init $(1)/etc/init.d/cloudflared
+endif
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/bin/cloudflared $(1)/usr/bin/cloudflared
 	$(INSTALL_DIR) $(1)/lib/upgrade/keep.d
