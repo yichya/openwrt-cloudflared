@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openwrt-cloudflared
-PKG_VERSION:=2022.8.2
+PKG_VERSION:=2022.8.4
 PKG_RELEASE:=2
 
 PKG_LICENSE:=MPLv2
@@ -10,7 +10,7 @@ PKG_MAINTAINER:=yichya <mail@yichya.dev>
 
 PKG_SOURCE:=cloudflared-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/cloudflare/cloudflared/tar.gz/${PKG_VERSION}?
-PKG_HASH:=45ff0c9b95997e2f1795b08af5c3ed2fc19d2d3cb35391c01452163003b858a1
+PKG_HASH:=9bdd6991e1b42a7f26262acacc66890061fed7e342321fc4108ecab810aa056a
 PKG_BUILD_DEPENDS:=golang/host
 PKG_BUILD_PARALLEL:=1
 
