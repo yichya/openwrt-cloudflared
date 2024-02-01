@@ -1,5 +1,10 @@
 # cloudflared for OpenWrt
 
+> [!NOTE]  
+> The OpenWrt packages feed now has the `cloudflared` package and Luci Application `luci-app-cloudflared` that provides a GUI for configuration.
+> You can install them with the command `opkg install cloudflared luci-app-cloudflared`
+
+
 Really convenient for exposing services behind NAT.
 
 See [https://developers.cloudflare.com/cloudflare-one/connections/connect-apps](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps) for details.
